@@ -1,73 +1,66 @@
 <template>
-  <v-layout
-    column
-    justify-center
-    align-center
-  >
-    <v-flex
-      xs12
-      sm8
-      md6
-    >
-      <div class="text-xs-center">
-        <logo />
-        <vuetify-logo />
-      </div>
-      <v-card>
-        <v-card-title class="headline">Welcome to the Vuetify + Nuxt.js template</v-card-title>
-        <v-card-text>
-          <p>Vuetify is a progressive Material Design component framework for Vue.js. It was designed to empower developers to create amazing applications.</p>
-          <p>For more information on Vuetify, check out the <a
-            href="https://vuetifyjs.com"
-            target="_blank"
-          >documentation</a>.</p>
-          <p>If you have questions, please join the official <a
-            href="https://chat.vuetifyjs.com/"
-            target="_blank"
-            title="chat"
-          >discord</a>.</p>
-          <p>Find a bug? Report it on the github <a
-            href="https://github.com/vuetifyjs/vuetify/issues"
-            target="_blank"
-            title="contribute"
-          >issue board</a>.</p>
-          <p>Thank you for developing with Vuetify and I look forward to bringing more exciting features in the future.</p>
-          <div class="text-xs-right">
-            <em><small>&mdash; John Leider</small></em>
-          </div>
-          <hr class="my-3">
-          <a
-            href="https://nuxtjs.org/"
-            target="_blank"
-          >Nuxt Documentation</a>
-          <br>
-          <a
-            href="https://github.com/nuxt/nuxt.js"
-            target="_blank"
-          >Nuxt GitHub</a>
-        </v-card-text>
-        <v-card-actions>
-          <v-spacer />
-          <v-btn
-            color="primary"
-            flat
-            nuxt
-            to="/inspire"
-          >Continue</v-btn>
-        </v-card-actions>
-      </v-card>
-    </v-flex>
-  </v-layout>
+  <div>
+    <dev v-if="descriptionFlag">
+      Please add query parameter "users" like
+      <br>http://localhost:3000/?users=nannany,platykun
+    </dev>
+    <br>
+    <v-container fluid>
+      <v-flex v-for="(user,index) in users" :key="index">
+        <v-checkbox v-model="selected" :label="user" :value="user">{{user}}</v-checkbox>
+      </v-flex>
+    </v-container>
+    <v-btn @click="shuffle">シャッフルボタン</v-btn>
+    <v-btn :to="resultUtl">結果作成</v-btn>
+  </div>
 </template>
 
 <script>
-import Logo from '~/components/Logo.vue'
-import VuetifyLogo from '~/components/VuetifyLogo.vue'
-
 export default {
-  components: {
-    Logo,
-    VuetifyLogo
+  data() {
+    return {
+      users: [],
+      selected: [],
+      array: [0, 1, 2, 3, 4, 5, 6, 7, 8, 9],
+      descriptionFlag: true
+    };
+  },
+  asyncData(context) {
+    let descriptionFlag = context.query["users"] == null ? true : false;
+    let splitUsers;
+    if (!descriptionFlag) {
+      splitUsers = context.query["users"].split(",");
+    }
+
+    return {
+      users: splitUsers,
+      descriptionFlag: descriptionFlag
+    };
+  },
+  computed: {
+    resultUtl() {
+      let users = "users=" + this.selected;
+      // TODO sheed値の桁数などは要検討
+      let seed = "seed=" + Math.random();
+
+      return "/result?" + users + "&" + seed;
+    }
+  },
+  methods: {
+    shuffle() {
+      console.log("called");
+
+      for (let i = this.array.length - 1; i >= 0; i--) {
+        // 0~iのランダムな数値を取得
+        let rand = Math.floor(Math.random() * (i + 1));
+
+        // 配列の数値を入れ替える
+        [this.array[i], this.array[rand]] = [this.array[rand], this.array[i]];
+      }
+
+      //TODO シャッフルする対象の配列の修正
+      console.log(this.array);
+    }
   }
-}
+};
 </script>
