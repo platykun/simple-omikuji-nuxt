@@ -14,14 +14,14 @@
         <v-list-tile :key="user">
           <v-list-tile-action>
             <v-checkbox
-              v-model="selected"
-              :value="user"/>
+              v-model="user.selected"
+              :value="user.selected"/>
           </v-list-tile-action>
 
           <v-list-tile-content>
             <v-text-field
-              v-model="users[index]"
-              :value="user"/>
+              v-model="user.user"
+              :value="user.user"/>
           </v-list-tile-content>
         </v-list-tile>
         <v-divider
@@ -29,7 +29,6 @@
           :key="`user-divider-${index}`"/>
       </template>
     </v-list>
-
 
     <v-btn :to="resultUtl">結果作成</v-btn>
   </div>
@@ -40,36 +39,50 @@
     data() {
       return {
         users: [],
-        selected: [],
-        array: [0, 1, 2, 3, 4, 5, 6, 7, 8, 9],
-        descriptionFlag: true
+        descriptionFlag: false,
       };
     },
     asyncData(context) {
-      let descriptionFlag = context.query["users"] == null ? true : false;
-      let splitUsers;
-      if (!descriptionFlag) {
-        splitUsers = context.query["users"].split(",");
+      let queryUsers = context.query['users'];
+
+      if (queryUsers == null) {
+        return {
+          descriptionFlag: true,
+        }
       }
 
+      let mappedSplitUsers = queryUsers
+        .split(',')
+        .map(s => {
+            return {
+              "user": s,
+              "selected": true
+            }
+          }
+        );
+
       return {
-        users: splitUsers,
-        selected: splitUsers,
-        descriptionFlag: descriptionFlag
+        users: mappedSplitUsers,
+        descriptionFlag: false,
       };
     },
     computed: {
       resultUtl() {
-        let users = "users=" + this.selected;
-        // TODO sheed値の桁数などは要検討
-        let seed = "seed=" + Math.random();
+        let selectedUserName = this.users
+          .filter(s => s.selected)
+          .map(s => s.user);
+        let seed = Math.random();
 
-        return "/result?" + users + "&" + seed;
+        return "/result?users=" + selectedUserName + "&seed=" + seed;
       }
     },
     methods: {
       addUser() {
-        this.users.push("");
+        this.users.push(
+          {
+            "user": "",
+            "selected": true
+          });
       }
     }
   };
