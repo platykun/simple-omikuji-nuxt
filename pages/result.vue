@@ -20,6 +20,8 @@
 </template>
 
 <script>
+  import ShuffleUtil from '~/plugins/ShuffleUtil'
+
   export default {
     data() {
       return {
@@ -34,37 +36,18 @@
             value: 'user'
           },
         ],
-        users: [],
-        shuffledUsers: [
-          {
-            role: "S",
-            user: "hoge"
-          },
-          {
-            role: "P",
-            user: "piyo"
-          },
-          {
-            role: "D",
-            user: "ほげ"
-          },
-          {
-            role: "D",
-            user: "ぴよ"
-          },
-        ],
-        selected: "",
-        seed: ""
+        shuffledUsers: [],
       };
     },
     asyncData(context) {
-      // TODO 引数が空になった時には空文字
-      let splitUsers = context.query['users'].split(',');
-      let seed = context.query['seed'];
+      let seedValue = context.query['seed'];
+      let roleList = ["S", "P", "D", "D", "D", "D", "D", "D", "D", "D"];
+      let users = context.query['users'].split(',');
+
+      let shuffledUsers = ShuffleUtil.shuffle(roleList, users, seedValue);
 
       return {
-        users: splitUsers,
-        seed: seed,
+        shuffledUsers: shuffledUsers,
       }
     },
   }
