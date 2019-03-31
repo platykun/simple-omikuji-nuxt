@@ -1,17 +1,23 @@
 <template>
   <div>
     omikuji
+    {{ users }}
   </div>
 </template>
 
 <script>
-  import Logo from '~/components/Logo.vue'
-  import VuetifyLogo from '~/components/VuetifyLogo.vue'
-
   export default {
-    components: {
-      Logo,
-      VuetifyLogo
-    }
+    data() {
+      return {
+        users: "",
+      };
+    },
+    asyncData(context) {
+      // TODO context.query['users']をカンマ区切りで配列化
+      // TODO 引数が空になった時には空文字
+      return {
+        users: context.query['users']
+      }
+    },
   }
 </script>
