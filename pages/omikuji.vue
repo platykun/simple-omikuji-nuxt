@@ -4,7 +4,7 @@
     <br>
     // TODO 複数選択できない
     <v-container fluid>
-      <v-flex v-for="user in users" >
+      <v-flex v-for="(user,index) in users" :key="index">
         <v-checkbox v-model="selected" :label="user" :value="user">{{user}}</v-checkbox>
       </v-flex>
     </v-container>
@@ -18,7 +18,7 @@
     data() {
       return {
         users: [],
-        selected: "",
+        selected: [],
         array: [0, 1, 2, 3, 4, 5, 6, 7, 8, 9],
       };
     },
