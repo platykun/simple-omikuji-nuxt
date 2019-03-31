@@ -9,6 +9,7 @@
       </v-flex>
     </v-container>
     <v-btn @click="shuffle">シャッフルボタン</v-btn>
+    <v-btn :to="resultUtl">結果作成</v-btn>
   </div>
 </template>
 
@@ -18,7 +19,6 @@
       return {
         users: [],
         selected: "",
-        selectedUsers: [],
         array: [0, 1, 2, 3, 4, 5, 6, 7, 8, 9],
       };
     },
@@ -31,15 +31,14 @@
         users: splitUsers,
       }
     },
-    watch: {
-      selected() {
-        this.selectedUsers = this.selected.split(',');
-      }
-    },
     computed: {
-      randomValue() {
-        return Math.random();
-      },
+      resultUtl() {
+        let users = "users=" + this.selected;
+        // TODO sheed値の桁数などは要検討
+        let seed = "seed=" + Math.random();
+
+        return "/result?" + users + "&" + seed;
+      }
     },
     methods: {
       shuffle() {
