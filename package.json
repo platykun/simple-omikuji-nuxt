@@ -12,6 +12,7 @@
     "test": "jest"
   },
   "dependencies": {
+    "copy-to-clipboard": "^3.0.8",
     "cross-env": "^5.2.0",
     "nuxt": "^2.4.0",
     "seedrandom": "^3.0.1",
