@@ -38,7 +38,15 @@ export default {
   },
   asyncData(context) {
     let seedValue = context.query["seed"];
-    let roleList = ["S", "P", "D", "D", "D", "D", "D", "D", "D", "D"];
+
+    let rolesQuery = context.query["roles"];
+    let roleList = [];
+    if(rolesQuery == null) {
+      roleList = ["S", "P", "D", "D", "D", "D", "D", "D", "D", "D"];
+    } else {
+      roleList = rolesQuery.split(',');
+    }
+
     let users = context.query["users"].split(",");
 
     let shuffledUsers = ShuffleUtil.shuffle(roleList, users, seedValue);
