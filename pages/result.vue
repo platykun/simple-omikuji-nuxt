@@ -59,7 +59,7 @@ export default {
     copyToClipboard() {
       let toClipboard = "";
       for (let shuffledUser of this.shuffledUsers) {
-        toClipboard += shuffledUser.role + ":" + shuffledUser.user + "\r\n";
+        toClipboard += "* " + shuffledUser.role + ":" + shuffledUser.user + "\r\n";
       }
       copy(toClipboard);
     }
